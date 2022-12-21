@@ -141,11 +141,11 @@ fn write(sarc: SarcFile, out_file: PathBuf, yaz0: bool, zstd: bool) {
 }
 
 fn zip(yaz0: bool, zstd: bool, in_dir: PathBuf, out_file: PathBuf, byte_order: Endian) {
-    let pattern = in_dir.to_string_lossy() + "/**/*";
+    let pattern = in_dir.to_string_lossy() + "/**/*.*";
     let dir = glob::glob(&pattern).unwrap();
     let files = dir.map(|child|{
         let path = child.unwrap();
-        let name = Some(path.strip_prefix(&in_dir).unwrap().to_string_lossy().into());
+        let name = Some(path.strip_prefix(&in_dir).unwrap().to_string_lossy().replace("\\", "/").into());
         let data = fs::read(path).unwrap();
 
         SarcEntry {
